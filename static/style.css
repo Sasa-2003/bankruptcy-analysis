@@ -1,0 +1,90 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.card {
+    margin-bottom: 24px;
+    padding: 18px;
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    background: #fafafa;
+}
+
+.summary-box {
+    margin-top: 10px;
+    padding: 14px;
+    background: #eef4ff;
+    border-left: 4px solid #2d6cdf;
+    border-radius: 8px;
+}
+
+.alert {
+    background: #ffe3e3;
+    color: #8a1f1f;
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+}
+
+.result-table, .input-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+}
+
+.result-table th, .result-table td,
+.input-table th, .input-table td {
+    border: 1px solid #d9d9d9;
+    padding: 10px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.result-table th, .input-table th {
+    background: #2d6cdf;
+    color: white;
+}
+
+input[type="text"] {
+    width: 95%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+button, .link-btn {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    background: #2d6cdf;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover, .link-btn:hover {
+    background: #2357b7;
+}
+
+.advice-list {
+    margin-top: 10px;
+    padding-left: 22px;
+}
+
+.advice-list li {
+    margin-bottom: 8px;
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты расчёта</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>Результаты расчёта</h1>
+    <a class="link-btn" href="/">Новый расчёт</a>
+
+    {% for row in rows %}
+    <section class="card">
+        <h2>{{ row.company }}</h2>
+
+        <h3>Исходные показатели</h3>
+        <table class="result-table">
+            <thead>
+                <tr>
+                    <th>Показатель</th>
+                    <th>Значение</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in row.features_table %}
+                <tr>
+                    <td>{{ item["Показатель"] }}</td>
+                    <td>{{ item["Значение"] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Модели банкротства</h3>
+        <table class="result-table">
+            <thead>
+                <tr>
+                    <th>Модель</th>
+                    <th>Значение</th>
+                    <th>Интерпретация</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in row.models_table %}
+                <tr>
+                    <td>{{ item["Модель"] }}</td>
+                    <td>{{ item["Значение"] }}</td>
+                    <td>{{ item["Интерпретация"] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Общий вывод</h3>
+        <div class="summary-box">
+            <p>{{ row.overall }}</p>
+        </div>
+
+        <h3>Рекомендации</h3>
+        <ul class="advice-list">
+            {% for item in row.advice %}
+            <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endfor %}
+</div>
+</body>
+</html>

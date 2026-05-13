@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Сервис оценки вероятности банкротства</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>Сервис оценки вероятности банкротства</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert">{{ messages[0] }}</div>
+        {% endif %}
+    {% endwith %}
+
+    <form method="post" enctype="multipart/form-data">
+        <section class="card">
+            <h2>Загрузка файла</h2>
+            <p>Поддерживаются CSV и Excel.</p>
+            <input type="file" name="file" accept=".csv,.xlsx,.xls">
+        </section>
+
+        <section class="card">
+            <h2>Ручной ввод</h2>
+            <table class="input-table">
+                <thead>
+                    <tr>
+                        <th>Показатель</th>
+                        <th>Значение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for field in fields %}
+                    <tr>
+                        <!-- Добавляем атрибут title, который создаст всплывающую подсказку -->
+                        <td title="Код строки в отчетности: {{ fields_with_codes[field] }}" style="cursor: help; border-bottom: 1px dashed #ccc;">
+                            {{ field }} ℹ️
+                        </td>
+                        <td>
+                            <input type="text" name="{{ field }}" placeholder="Введите значение">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <button type="submit">Рассчитать</button>
+    </form>
+</div>
+
+<script>
+/**
+ * Функция для форматирования чисел с поддержкой дробной части и отрицательных значений
+ */
+function formatNumber(value) {
+    if (!value) return "";
+
+    // 1. Проверяем наличие минуса в начале
+    const isNegative = value.startsWith('-');
+
+    // 2. Очищаем от всего, кроме цифр и разделителей
+    let cleaned = value.replace(/[^\d.,]/g, '').replace(',', '.');
+
+    // 3. Обработка нескольких точек
+    const parts = cleaned.split('.');
+    if (parts.length > 2) {
+        cleaned = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    // Если в поле только минус
+    if (cleaned === '' && isNegative) return '-';
+    if (cleaned === '') return '';
+
+    // 4. Разбиваем на целую и дробную
+    let [integerPart, decimalPart] = cleaned.split('.');
+
+    // Важный момент: если integerPart пустой (например, ввели "-.5"), 
+    // оставляем его пустым, чтобы не превращать в "-0.5" насильно, пока это не нужно
+    if (integerPart) {
+        // Убираем ведущие нули, чтобы не было "05"
+        let numForLocale = parseInt(integerPart, 10);
+        if (!isNaN(numForLocale)) {
+            integerPart = numForLocale.toLocaleString('ru-RU');
+        }
+    }
+
+    // 5. Собираем результат
+    let result = (isNegative ? '-' : '') + (integerPart || '0');
+
+    // Если введена точка, приклеиваем дробную часть
+    if (cleaned.includes('.')) {
+        result += '.' + (decimalPart !== undefined ? decimalPart : '');
+    }
+
+    return result;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('input[type="text"]');
+
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            // Сохраняем позицию курсора
+            let cursorPosition = this.selectionStart;
+            let oldLength = this.value.length;
+
+            // Форматируем
+            this.value = formatNumber(this.value);
+
+            // Корректируем позицию курсора после добавления пробелов-разделителей
+            let newLength = this.value.length;
+            cursorPosition += (newLength - oldLength);
+            this.setSelectionRange(cursorPosition, cursorPosition);
+        });
+    });
+});
+</script>
+</body>
+</html>
